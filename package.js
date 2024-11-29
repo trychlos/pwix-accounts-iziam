@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:accounts-iziam',
-    version: '1.0.0',
+    version: '1.0.1-rc',
     summary: 'Login service for izIAM accounts',
     git: 'https://github.com/trychlos/pwix-accounts-iziam.git',
     documentation: 'README.md'
