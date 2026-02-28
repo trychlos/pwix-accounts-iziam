@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:accounts-iziam',
-    version: '1.0.1-rc',
+    version: '1.1.0-rc',
     summary: 'Login service for izIAM accounts',
     git: 'https://github.com/trychlos/pwix-accounts-iziam.git',
     documentation: 'README.md'
@@ -27,6 +27,7 @@ function configure( api ){
     api.use( 'ecmascript' );
     api.use( 'less@4.0.0', 'client' );
     api.use( 'pwix:i18n@1.5.2' );
+    api.use( 'pwix:logger@1.0.0-rc' );
     api.use( 'pwix:iziam-oidc@1.0.0-rc' );
     api.use(
         ['pwix:accounts-ui@2.0.0'], ['client', 'server'], { weak: true }

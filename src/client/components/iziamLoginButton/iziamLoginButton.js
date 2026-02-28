@@ -2,9 +2,12 @@
  * pwix:accounts-iziam/src/client/components/iziamLoginButton/iziamLoginButton.js
  */
 
+import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
 
 import './iziamLoginButton.html';
+
+const logger = Logger.get();
 
 Template.iziamLoginButton.helpers({
     // classes to be added to the button
@@ -38,7 +41,7 @@ Template.iziamLoginButton.events({
         Meteor.loginWithIzIAM( this.iziamOptions || {}, ( err ) => {
             // either an error or undefined - no other result
             if( err ){
-                console.error( 'loginWithIzIAM() callback', err );
+                logger.error( 'loginWithIzIAM() callback', err );
             }
         });
     }

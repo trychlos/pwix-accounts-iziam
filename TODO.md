@@ -10,7 +10,8 @@
 
 |   Id | Date       | Description and comment(s) |
 | ---: | :---       | :---                       |
-|    1 |  |  |
+|    1 | 2026- 2-12 | move exported assets to /resources directory |
+|    2 |  |  |
 
 ---
 ## Done
