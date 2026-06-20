@@ -8,6 +8,7 @@
 
     - Use pwix:logger universal logger, thus bumping minor candidate version number
     - Move asset resources to root directory (todo #1)
+    - Add 'mobileHint' to iziamOptions before calling loginWithIziam()
 
 ### 1.0.0
 

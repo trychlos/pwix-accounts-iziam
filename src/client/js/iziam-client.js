@@ -5,9 +5,9 @@
  */
 
 import { Accounts } from 'meteor/accounts-base';
-import { izIAM } from 'meteor/pwix:iziam-oidc';
+import { iziamOIDC } from 'meteor/pwix:iziam-oidc';
 
-Accounts.oauth.registerService( izIAM.C.Service );
+Accounts.oauth.registerService( iziamOIDC.C.Service );
 
 const loginWithIzIAM = ( options, callback ) => {
 
@@ -18,9 +18,9 @@ const loginWithIzIAM = ( options, callback ) => {
     }
 
     const credentialRequestCompleteCallback = Accounts.oauth.credentialRequestCompleteHandler( callback );
-    izIAM.requestCredential( options, credentialRequestCompleteCallback );
+    iziamOIDC.requestCredential( options, credentialRequestCompleteCallback );
 };
 
-Accounts.registerClientLoginFunction( izIAM.C.Service, loginWithIzIAM );
+Accounts.registerClientLoginFunction( iziamOIDC.C.Service, loginWithIzIAM );
 
-Meteor.loginWithIzIAM = ( ...args ) => Accounts.applyLoginFunction( izIAM.C.Service, args );
+Meteor.loginWithIzIAM = ( ...args ) => Accounts.applyLoginFunction( iziamOIDC.C.Service, args );

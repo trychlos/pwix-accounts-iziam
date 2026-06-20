@@ -4,6 +4,7 @@
 
 import { Logger } from 'meteor/pwix:logger';
 import { pwixI18n } from 'meteor/pwix:i18n';
+import { UILayout } from 'meteor/pwix:ui-layout';
 
 import './iziamLoginButton.html';
 
@@ -38,7 +39,10 @@ Template.iziamLoginButton.helpers({
 
 Template.iziamLoginButton.events({
     'click .iziamLoginButton button'( event, instance ){
-        Meteor.loginWithIzIAM( this.iziamOptions || {}, ( err ) => {
+        // before trying to connect, we add to options a hint for whether we are running inside of a mobile app
+        const opts = { ...this.iziamOptions || {} };
+        opts.mobileHint = UILayout.mobile();
+        Meteor.loginWithIzIAM( opts, ( err ) => {
             // either an error or undefined - no other result
             if( err ){
                 logger.error( 'loginWithIzIAM() callback', err );

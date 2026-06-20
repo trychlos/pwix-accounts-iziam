@@ -62,6 +62,8 @@ This configuration manages:
 
     - `issuerUrl`: MANDATORY - the URL of the izIAM.
 
+    This URL muust be available for and answer to OpenID discovery.
+
 - the client configuration which must match the izIAM registration:
 
     - `client_id`: MANDATORY - the client identifier issued at registration time

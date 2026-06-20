@@ -2,8 +2,8 @@
  * pwix:accounts-iziam/src/common/i18n/en.js
  */
 
-izIAM.i18n = {
-    ... izIAM.i18n,
+AccountsIziam.i18n = {
+    ... AccountsIziam.i18n,
     ... {
         fr: {
             change: {
