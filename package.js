@@ -35,7 +35,7 @@ function configure( api ){
     api.addFiles( 'src/client/components/iziamChangeButton/iziamChangeButton.js', 'client' );
     api.addFiles( 'src/client/components/iziamLoginButton/iziamLoginButton.js', 'client' );
     api.addFiles( 'src/client/components/iziamLogoutButton/iziamLogoutButton.js', 'client' );
-    api.addAssets( 'src/client/resources/svg/iziam.svg', 'client' );
+    api.addAssets( 'resources/svg/iziam.svg', 'client' );
 }
 
 // NPM dependencies are checked in /src/server/js/check_npms.js

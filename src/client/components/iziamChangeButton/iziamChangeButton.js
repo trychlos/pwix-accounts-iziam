@@ -28,8 +28,8 @@ Template.iziamChangeButton.helpers({
 Template.iziamChangeButton.events({
     async 'click .iziamChangeButton button'( event, instance ){
         // we expect to receive a new access_token after successful password change
-        const prevToken = await Meteor.callAsync( 'iziam.accessToken' );
-        Meteor.callAsync( 'iziam.changeOptions' ).then(( res ) => {
+        const prevToken = await Meteor.callAsync( 'pwix.iziamOIDC.m.accessToken' );
+        Meteor.callAsync( 'pwix.iziamOIDC.m.changeOptions' ).then(( res ) => {
             OAuth.showPopup( res.url, () => {
                 // end of interaction
                 //  wait for a new access token
@@ -38,7 +38,7 @@ Template.iziamChangeButton.events({
                 const length = 3000;
                 const start = Date.now();
                 const interval = Meteor.setInterval( async () => {
-                    const token = await Meteor.callAsync( 'iziam.accessToken' );
+                    const token = await Meteor.callAsync( 'pwix.iziamOIDC.m.accessToken' );
                     let now = Date.now();
                     if( token !== prevToken ){
                         Tolert.success( pwixI18n.label( I18N, 'change.success' ));
