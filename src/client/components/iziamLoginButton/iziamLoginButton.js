@@ -45,7 +45,15 @@ Template.iziamLoginButton.events({
         Meteor.loginWithIzIAM( opts, ( err ) => {
             // either an error or undefined - no other result
             if( err ){
-                logger.error( 'loginWithIzIAM() callback', err );
+                switch( err.errorType ){
+                    // the user has cancelled the login interaction: log, but this is not really an error
+                    case 'Accounts.LoginCancelledError':
+                        logger.debug( err.errorType );
+                        break;
+                    default:
+                        logger.error( 'loginWithIzIAM() callback', err );
+                        break;
+                }
             }
         });
     }
