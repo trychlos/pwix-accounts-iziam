@@ -10,6 +10,7 @@
     - Move asset resources to root directory (todo #1)
     - Add 'mobileHint' to iziamOptions before calling loginWithIziam()
     - Improve callback log when login is cancelled
+    - Common registration code is isolated in register.js
 
 ### 1.0.0
 

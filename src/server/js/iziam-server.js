@@ -7,8 +7,6 @@
 import { Accounts } from 'meteor/accounts-base';
 import { iziamOIDC } from 'meteor/pwix:iziam-oidc';
 
-Accounts.oauth.registerService( iziamOIDC.C.Service );
-
 Accounts.addAutopublishFields({
     forLoggedInUser: [ 'services.'+iziamOIDC.C.Service ],
     forOtherUsers: [ 'services.'+iziamOIDC.C.Service+'.username' ]

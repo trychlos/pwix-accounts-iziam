@@ -7,8 +7,6 @@
 import { Accounts } from 'meteor/accounts-base';
 import { iziamOIDC } from 'meteor/pwix:iziam-oidc';
 
-Accounts.oauth.registerService( iziamOIDC.C.Service );
-
 const loginWithIzIAM = ( options, callback ) => {
 
     // support a callback without options
