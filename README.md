@@ -1,160 +1,116 @@
 # pwix:accounts-iziam
 
-## What is it ?
+The application-facing izIAM integration for Meteor. Applications use this
+package for login, logout, password change, and server-side OAuth grants. It
+relies exclusively on `pwix:iziam-oauth` for OAuth 2 and OpenID Connect 1.0.
 
-A login service for izIAM(©) Identity and Access Manager accounts which implements [OAuth 2.1](https://oauth.net/2.1/) and 
-[OpenID Connect 1.0](https://openid.net/specs/openid-connect-core-1_0.html) login flows.
+The former `pwix:iziam-oidc` package is retired. Remove any direct dependency on
+it. There is no compatibility alias or parallel protocol implementation.
 
-This package is based on:
+## Installation and configuration
 
-- [accounts-github](https://github.com/meteor/meteor/tree/devel/packages/accounts-github)
-- [salleman:accounts-oidc](https://github.com/salleman33/meteor-accounts-oidc/tree/master/packages/switch_accounts-oidc) v 1.0.12
-- [Meteor documentation](https://docs.meteor.com/api/accounts#Meteor-loginWith%3CExternalService%3E)
+Requires Meteor 3.3.1 or later (tested on 3.5.2) and Node 22.12 or later.
 
-On client side, this package defines `Meteor.loginWithIzIAM()` function, which itself calls `izIAM.requestCredential()`.
-
-On server side, the package calls `Accounts.addAutopublishFields()` whith the fields brought up by izIAM Identity and Access Manager.
-
-## How does that work ?
-
-The application which does want take advantage of the izIAM Identity and Access Manager to manage its users accounts must first register as a client against izIAM.
-
-Once registered, it gets a `ClientId` and a client secret.
-
-It now has to:
-
-- include the `iziamLoginButton` component in the ad-hoc place of its pages
-
-- define the needed configuration as a private JSON structure in its server settings, for example in a `private/config/server/environments.json` file:
-
-```json
-    "<appname>": {
-        "environments": {
-            "<environment>": {
-                "private": {
-                    "iziam": {
-                        "comments": [
-                            "openbook-dev to iziam-dev - test user for auth code grant flow"
-                        ],
-                        "loginStyle": "popup",
-                        "popupOptions": "{ width: 900, height: 450 }",
-                        "issuerUrl": "http://localhost:3003/iziam",
-                        "client_id": "6eb26be8c55b44f48f2d046232e8cfac",
-                        "client_secret": "edsfvgrtyhujhngbnhjkui3456789okjgfb098765432xwdcfvghjk87654xcfvgh_7654DFGH",
-                        "redirect_uri": "https://slim14.trychlos.lan/_oauth/iziam",
-                        "scopes": [
-                            "openid",
-                            "offline_access"
-                        ]
-                    }
-                }
-            },
+```sh
+meteor add pwix:accounts-iziam
+meteor npm install 'openid-client@^6.8.4'
 ```
 
-This configuration manages:
+The pwix settings, logging, i18n and UI packages retain their own npm peers.
+Configure `private.iziam` in the selected environment, or provide
+`Meteor.settings.private.iziam` directly. A minimal configuration is:
 
-- the style and size of the login dialog:
+```json
+{
+  "private": {
+    "iziam": {
+      "issuerUrl": "https://identity.example/tenant",
+      "client_id": "application-client",
+      "client_secret": "configure-outside-source-control",
+      "redirect_uri": "https://application.example/_oauth/iziam",
+      "scopes": ["openid", "profile", "email"]
+    }
+  }
+}
+```
 
-    - `loginStyle`: either `popup` or `redirect`, defaulting to `popup`.
+`redirect_uri` must match `Meteor.absoluteUrl('_oauth/iziam')`. Set `ROOT_URL`
+correctly and register the URL with izIAM. Client secrets remain server-side.
+The complete settings and server-grant contract are documented in
+[pwix:iziam-oauth](https://github.com/trychlos/pwix-iziam-oauth#readme).
 
-    - `popupOptions`: any style option to be given to the popup, defaulting to `{ width: 900, height: 450 }`.
+Before the first request, configure the same return route on client and server:
 
-- the izIAM configuration:
+```js
+import { AccountsIziam } from 'meteor/pwix:accounts-iziam';
+AccountsIziam.configure({ afterRoute: '/' });
+```
 
-    - `issuerUrl`: MANDATORY - the URL of the izIAM.
+## Browser API
 
-    This URL muust be available for and answer to OpenID discovery.
+- `Meteor.loginWithIzIAM(options?, callback?)` / `AccountsIziam.login(...)`:
+  start OIDC login. Options: `loginStyle` (`popup` or `redirect`), `popupOptions`
+  (object), `scopes` (array), and `mobileHint` (forces redirect).
+- `AccountsIziam.changePassword(options?, callback?)`: start izIAM's password
+  interaction for the logged-in identity. A different returned subject is
+  rejected. The callback reports completion or failure; tokens are not polled.
+- `await AccountsIziam.logout()`: obtain the provider end-session URL while
+  authenticated, end the Meteor session, then visit that URL if available.
+  Plain `Meteor.logout()` performs local logout only.
+- `AccountsIziam.GrantType.Knowns()`: translated grant metadata; also provides
+  `byId`, `id`, `label`, and `description` helpers.
 
-- the client configuration which must match the izIAM registration:
+Options cannot override the issuer, callback endpoint or client credentials.
+OIDC login adds the `openid` scope and validates the ID token and UserInfo subject.
+Users keep the `services.iziam` identity; only public identity fields are selected
+for autopublication. Access tokens, refresh tokens and ID tokens stay private.
 
-    - `client_id`: MANDATORY - the client identifier issued at registration time
+## Server API
 
-    - `client_secret`: if the client wants authenticate against the token endpoint
+```js
+import { AccountsIziam } from 'meteor/pwix:accounts-iziam';
 
-    - `redirect_uri`: one of the pre-registered allowed redirection URIs
+const machine = await AccountsIziam.authorizationFlow('client_credentials', {
+    scopes: ['api:read']
+});
+const renewed = await AccountsIziam.authorizationFlow('refresh_token', {
+    credentials: storedCredentials
+});
+```
 
-    - `resources`: one or more resources asked by your client application, defaulting to `[]`
+These functions are server-only and are not anonymous Meteor methods. The
+application stores the resulting credentials and serializes refreshes for each
+grant so rotated refresh tokens cannot overwrite each other.
 
-    - `scopes`: one or more scopes your client application wants use, defaulting to `[ "openid" ]`
+For OAuth-only authorization code, set private `oauth_redirect_uri` to your own
+server callback (distinct from `/_oauth/iziam`):
 
-    - `token_endpoint_auth_method`: the client authentication method, defaulting to `client_secret_basic`
+```js
+const launch = await AccountsIziam.authorizationFlow('authorization_code', {
+    scopes: ['api:read']
+});
+// Save launch.credentialToken in the initiating application session and direct
+// that session's browser to launch.url.
 
-## Provides
+// In the application's server callback, recover the expected value from that
+// same session, never from the callback query itself:
+const credentials = await AccountsIziam.completeAuthorization(query, savedCredentialToken);
+```
 
-### Functions
+OAuth-only authorization returns tokens and does not establish a Meteor login.
+Grant results use `accessToken`, `tokenType`, optional `refreshToken`, `idToken`,
+`scope`, and `expiresAt` (milliseconds since epoch). If a refresh omits a refresh
+token or scope, the previous value is preserved.
 
-#### `Meteor.loginWithIzIAM( options<Object>, ( err ) => {})`
+## Blaze components
 
-An async function which starts the login OpenID flow. It doesn't return any valuable value. In order to get informed about the result of this function, the application has to react on the login status of the user.
+`iziamLoginButton`, `iziamChangeButton`, and `iziamLogoutButton` accept `btnClasses`
+and `btnLabel`. Login accepts `withLabel`, `withLogo`, and `iziamOptions` (the
+login options above). Password change accepts `onComplete(error)` for application
+notifications. Logout uses `AccountsIziam.logout()`.
 
-### Components
+## Validation
 
-#### `iziamChangeButton`
-
-A "change password" button Blaze template to be called with following data context:
-
-- `btnClasses`
-
-    A list of classes to be added to the button, defaulting to `btn-outline-primary`;
-
-- `btnLabel`
-
-    The button label, defaulting to (translated) 'Change password'.
-
-#### `iziamLoginButton`
-
-A login button Blaze template to be called with following data context:
-
-- `btnClasses`
-
-    A list of classes to be added to the button, defaulting to `btn-outline-primary`;
-
-- `btnLabel`
-
-    The button label, defaulting to (translated) 'Login with izIAM'.
-
-- `withLabel`
-
-    Whether we want display a label in the button, defaulting to `true`.
-
-- `withLogo`
-
-    Whether we want display the izIAM logo in the button, defaulting to `true`.
-
-- `iziamOptions`
-
-    An options object to be passed to `pwix:iziam-oidc` package and which may contain any `openid-client` option.
-
-#### `iziamLogoutButton`
-
-A logout button Blaze template to be called with following data context:
-
-- `btnClasses`
-
-    A list of classes to be added to the button, defaulting to `btn-outline-primary`;
-
-- `btnLabel`
-
-    The button label, defaulting to (translated) 'Logout'.
-
-This is for consistency reason only, and in anyway not mandatory to use. Clicking on the button actually just triggers the `Meteor.logout()` standard function.
-
-## Configuration
-
-None at the moment.
-
-## NPM peer dependencies
-
-None at the moment.
-
-## Translations
-
-New and updated translations are willingly accepted, and more than welcome. Just be kind enough to submit a PR on the [Github repository](https://github.com/trychlos/pwix-accounts-iziam/pulls).
-
-## Cookies and comparable technologies
-
-None at the moment.
-
----
-P. Wieser
-- Last updated on 2024, Nov. 29th
+The consolidated package includes Node protocol tests, Meteor client/server
+tests, and a Chromium walkthrough covering login, password change and logout.
+See its maintainer documentation. Nothing is published automatically.
