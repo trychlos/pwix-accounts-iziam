@@ -1,11 +1,16 @@
-// Import Tinytest from the tinytest Meteor package.
-import { Tinytest } from "meteor/tinytest";
+import { Tinytest } from 'meteor/tinytest';
+import { Meteor } from 'meteor/meteor';
+import { AccountsIziam } from 'meteor/pwix:accounts-iziam';
 
-// Import and rename a variable exported by iziam.js.
-import { name as packageName } from "meteor/pwix:accounts-iziam";
-
-// Write your tests here!
-// Here is an example.
-Tinytest.add( 'iziam - example', function( test ){
-    test.equal( packageName, 'iziam' );
+Tinytest.add('accounts-iziam - application facade', test => {
+    test.equal(typeof AccountsIziam.configure, 'function');
+    if (Meteor.isClient) {
+        test.equal(typeof Meteor.loginWithIzIAM, 'function');
+        test.equal(typeof AccountsIziam.changePassword, 'function');
+        test.equal(typeof AccountsIziam.logout, 'function');
+        test.equal(AccountsIziam.authorizationFlow, undefined);
+    } else {
+        test.equal(typeof AccountsIziam.authorizationFlow, 'function');
+        test.equal(typeof AccountsIziam.completeAuthorization, 'function');
+    }
 });
