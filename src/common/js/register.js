@@ -3,6 +3,6 @@
  */
 
 import { Accounts } from 'meteor/accounts-base';
-import { iziamOIDC } from 'meteor/pwix:iziam-oidc';
+import { iziamOAuth } from 'meteor/pwix:iziam-oauth';
 
-Accounts.oauth.registerService( iziamOIDC.C.Service );
+Accounts.oauth.registerService( iziamOAuth.C.Service );

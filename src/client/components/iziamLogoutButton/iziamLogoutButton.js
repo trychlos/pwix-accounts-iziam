@@ -35,6 +35,6 @@ Template.iziamLogoutButton.helpers({
 
 Template.iziamLogoutButton.events({
     'click .iziamLogoutButton button'( event, instance ){
-        Meteor.logout();
+        AccountsIziam.logout().catch(error => console.error('izIAM logout failed', error.reason || error.message));
     }
 });

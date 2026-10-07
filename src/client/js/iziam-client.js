@@ -1,24 +1,24 @@
-/*
- * pwix:accounts-iziam/src/client/js/iziam-client.js
- *
- * See https://docs.meteor.com/api/accounts#Meteor-loginWith%3CExternalService%3E
- */
-
 import { Accounts } from 'meteor/accounts-base';
-import { iziamOIDC } from 'meteor/pwix:iziam-oidc';
+import { Meteor } from 'meteor/meteor';
+import { iziamOAuth } from 'meteor/pwix:iziam-oauth';
 
-const loginWithIzIAM = ( options, callback ) => {
+AccountsIziam.configure = options => iziamOAuth.configure(options);
+AccountsIziam.login = (options, callback) => {
+    if (typeof options === 'function') { callback = options; options = {}; }
+    iziamOAuth.requestCredential(options, Accounts.oauth.credentialRequestCompleteHandler(callback));
+};
+Accounts.registerClientLoginFunction('iziam', AccountsIziam.login);
+Meteor.loginWithIzIAM = (...args) => Accounts.applyLoginFunction('iziam', args);
 
-    // support a callback without options
-    if( !callback && typeof options === 'function' ){
-        callback = options;
-        options = null;
-    }
-
-    const credentialRequestCompleteCallback = Accounts.oauth.credentialRequestCompleteHandler( callback );
-    iziamOIDC.requestCredential( options, credentialRequestCompleteCallback );
+AccountsIziam.changePassword = (options, callback) => {
+    if (typeof options === 'function') { callback = options; options = {}; }
+    iziamOAuth.requestCredential(options, Accounts.oauth.credentialRequestCompleteHandler(callback),
+        'pwix.accountsIziam.changeOptions');
 };
 
-Accounts.registerClientLoginFunction( iziamOIDC.C.Service, loginWithIzIAM );
-
-Meteor.loginWithIzIAM = ( ...args ) => Accounts.applyLoginFunction( iziamOIDC.C.Service, args );
+// Fetch the end-session URL while this DDP connection is still authenticated.
+AccountsIziam.logout = async () => {
+    const result = await Meteor.callAsync('pwix.accountsIziam.logoutOptions');
+    await new Promise((resolve, reject) => Meteor.logout(error => error ? reject(error) : resolve()));
+    if (result?.url) window.location.assign(result.url);
+};
