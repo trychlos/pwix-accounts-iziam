@@ -2,7 +2,8 @@
 
 ## What is it ?
 
-A login service for izIAM(©) Identity and Access Manager accounts which implements [OpenID Connect 1.0](https://openid.net/specs/openid-connect-core-1_0.html) login flow.
+A login service for izIAM(©) Identity and Access Manager accounts which implements [OAuth 2.1](https://oauth.net/2.1/) and 
+[OpenID Connect 1.0](https://openid.net/specs/openid-connect-core-1_0.html) login flows.
 
 This package is based on:
 
