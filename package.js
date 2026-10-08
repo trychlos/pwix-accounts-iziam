@@ -29,12 +29,13 @@ function configure( api ){
     api.use( 'blaze-html-templates@3.0.0', 'client' );
     api.use( 'ecmascript' );
     api.use( 'check' );
-    api.use( 'oauth' );
     api.use( 'less@4.0.0', 'client' );
+    api.use( 'oauth' );
     api.use( 'pwix:i18n@1.5.2' );
     api.use( 'pwix:iziam-oauth@1.0.0-rc.1' );
     api.use( 'pwix:logger@1.0.0-rc' );
     api.use( 'pwix:ui-layout@2.2.0' );
+    api.use( 'reactive-var' );
     api.use(
         ['pwix:accounts-ui@2.0.0'], ['client', 'server'], { weak: true }
     );

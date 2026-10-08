@@ -6,4 +6,5 @@ import '../../common/js/index.js';
 
 import '../stylesheets/iziam-buttons.less';
 
+import './functions.js';
 import './iziam-client.js';
