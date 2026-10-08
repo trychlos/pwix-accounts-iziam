@@ -1,10 +1,14 @@
 # pwix:accounts-iziam
 
-The application-facing izIAM integration for Meteor. Applications use this
-package for login, password change, and server-side OAuth grants. It
+## What is it ?
+
+`pwix:accounts-iziam` is the application-facing izIAM integration for Meteor. Applications use this
+package for login, password change, and server-side OAuth or OopenID grants. It
 relies exclusively on `pwix:iziam-oauth` for OAuth 2 and OpenID Connect 1.0.
 
-The former `pwix:iziam-oidc` package is retired. Remove any direct dependency on
+On client side, this package defines `Meteor.loginWithIziam()` function.
+
+The former `pwix:iziam-oidc` package is retired. You should remove any direct dependency on
 it. There is no compatibility alias or parallel protocol implementation.
 
 ## Installation and configuration
@@ -12,8 +16,8 @@ it. There is no compatibility alias or parallel protocol implementation.
 Requires Meteor 3.3.1 or later (tested on 3.5.2) and Node 22.12 or later.
 
 ```sh
-meteor add pwix:accounts-iziam
-meteor npm install 'openid-client@^6.8.4'
+    meteor add pwix:accounts-iziam
+    meteor npm install 'openid-client@^6.8.4'
 ```
 
 The pwix settings, logging, i18n and UI packages retain their own npm peers.
@@ -22,15 +26,15 @@ Configure `private.iziam` in the selected environment, or provide
 
 ```json
 {
-  "private": {
-    "iziam": {
-      "issuerUrl": "https://identity.example/tenant",
-      "client_id": "application-client",
-      "client_secret": "configure-outside-source-control",
-      "redirect_uri": "https://application.example/_oauth/iziam",
-      "scopes": ["openid", "profile", "email"]
+    "private": {
+        "iziam": {
+            "issuerUrl": "https://identity.example/tenant",
+            "client_id": "application-client",
+            "client_secret": "configure-outside-source-control",
+            "redirect_uri": "https://application.example/_oauth/iziam",
+            "scopes": [ "openid", "profile", "email" ]
+        }
     }
-  }
 }
 ```
 
@@ -86,15 +90,15 @@ For OAuth-only authorization code, set private `oauth_redirect_uri` to your own
 server callback (distinct from `/_oauth/iziam`):
 
 ```js
-const launch = await AccountsIziam.authorizationFlow('authorization_code', {
-    scopes: ['api:read']
-});
-// Save launch.credentialToken in the initiating application session and direct
-// that session's browser to launch.url.
+    const launch = await AccountsIziam.authorizationFlow('authorization_code', {
+        scopes: ['api:read']
+    });
+    // Save launch.credentialToken in the initiating application session and direct
+    // that session's browser to launch.url.
 
-// In the application's server callback, recover the expected value from that
-// same session, never from the callback query itself:
-const credentials = await AccountsIziam.completeAuthorization(query, savedCredentialToken);
+    // In the application's server callback, recover the expected value from that
+    // same session, never from the callback query itself:
+    const credentials = await AccountsIziam.completeAuthorization(query, savedCredentialToken);
 ```
 
 OAuth-only authorization returns tokens and does not establish a Meteor login.
@@ -114,3 +118,33 @@ notifications.
 The consolidated package includes Node protocol tests, Meteor client/server
 tests, and a Chromium walkthrough covering login and password change.
 See its maintainer documentation. Nothing is published automatically.
+
+## NPM peer dependencies
+
+Starting with v 1.0.0, and in accordance with advices from [the Meteor Guide](https://guide.meteor.com/writing-atmosphere-packages.html#peer-npm-dependencies), we no more hardcode NPM dependencies in the `Npm.depends` clause of the `package.js`.
+
+Instead we check npm versions of installed packages at runtime, on server startup, in development environment.
+
+Dependencies as of v 1.1.0:
+
+```js
+    'lodash': '^4.17.0'
+```
+
+Each of these dependencies should be installed at application level:
+
+```sh
+    meteor npm install <package> --save
+```
+
+## Translations
+
+New and updated translations are willingly accepted, and more than welcome. Just be kind enough to submit a PR on the [Github repository](https://github.com/trychlos/pwix-accounts-iziam/pulls).
+
+## Cookies and comparable technologies
+
+None at the moment.
+
+---
+P. Wieser
+- Last updated on 2026, May. 2nd
