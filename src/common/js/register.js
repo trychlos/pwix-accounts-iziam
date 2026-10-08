@@ -6,5 +6,3 @@ import { Accounts } from 'meteor/accounts-base';
 import { iziamOAuth } from 'meteor/pwix:iziam-oauth';
 
 Accounts.oauth.registerService( iziamOAuth.C.Service );
-
-AccountsIziam.GrantType = iziamOAuth.GrantType;

@@ -18,12 +18,6 @@ AccountsIziam.i18n = {
                     label: 'Se connecter avec izIAM',
                     title: 'Se connecte avec le gestionnaire d\'identités izIAM'
                 }
-            },
-            logout: {
-                button: {
-                    label: 'Se déconnecter',
-                    title: 'Termine cette session'
-                }
             }
         }
     }

@@ -1,7 +1,7 @@
 # pwix:accounts-iziam
 
 The application-facing izIAM integration for Meteor. Applications use this
-package for login, logout, password change, and server-side OAuth grants. It
+package for login, password change, and server-side OAuth grants. It
 relies exclusively on `pwix:iziam-oauth` for OAuth 2 and OpenID Connect 1.0.
 
 The former `pwix:iziam-oidc` package is retired. Remove any direct dependency on
@@ -51,14 +51,14 @@ AccountsIziam.configure({ afterRoute: '/' });
 - `Meteor.loginWithIzIAM(options?, callback?)` / `AccountsIziam.login(...)`:
   start OIDC login. Options: `loginStyle` (`popup` or `redirect`), `popupOptions`
   (object), `scopes` (array), and `mobileHint` (forces redirect).
+
 - `AccountsIziam.changePassword(options?, callback?)`: start izIAM's password
   interaction for the logged-in identity. A different returned subject is
   rejected. The callback reports completion or failure; tokens are not polled.
+
 - `await AccountsIziam.logout()`: obtain the provider end-session URL while
   authenticated, end the Meteor session, then visit that URL if available.
   Plain `Meteor.logout()` performs local logout only.
-- `AccountsIziam.GrantType.Knowns()`: translated grant metadata; also provides
-  `byId`, `id`, `label`, and `description` helpers.
 
 Options cannot override the issuer, callback endpoint or client credentials.
 OIDC login adds the `openid` scope and validates the ID token and UserInfo subject.
@@ -104,13 +104,13 @@ token or scope, the previous value is preserved.
 
 ## Blaze components
 
-`iziamLoginButton`, `iziamChangeButton`, and `iziamLogoutButton` accept `btnClasses`
+`iziamLoginButton` and `iziamChangeButton` both accept `btnClasses`
 and `btnLabel`. Login accepts `withLabel`, `withLogo`, and `iziamOptions` (the
 login options above). Password change accepts `onComplete(error)` for application
-notifications. Logout uses `AccountsIziam.logout()`.
+notifications.
 
 ## Validation
 
 The consolidated package includes Node protocol tests, Meteor client/server
-tests, and a Chromium walkthrough covering login, password change and logout.
+tests, and a Chromium walkthrough covering login and password change.
 See its maintainer documentation. Nothing is published automatically.

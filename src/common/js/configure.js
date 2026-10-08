@@ -20,9 +20,6 @@ AccountsIziam._defaults = {
     loginLabel: pwixI18n.label( I18N, 'login.button.label' ),
     loginLogo: '/packages/pwix_accounts-iziam/resources/svg/iziam.svg',
     loginTitle: pwixI18n.label( I18N, 'login.button.title' ),
-    logoutLabel: pwixI18n.label( I18N, 'logout.button.label' ),
-    logoutLogo: '/packages/pwix_accounts-iziam/resources/svg/iziam.svg',
-    logoutTitle: pwixI18n.label( I18N, 'login.button.title' ),
     verbosity: AccountsIziam.C.Verbose.CONFIGURE
 };
 

@@ -14,6 +14,8 @@
     - Switch directly to pwix:iziam-oauth and expose its server grants through AccountsIziam
     - Require Meteor 3.3.1+; remove token polling and restrict published identity fields
     - Add password-change and provider-logout facade methods
+    - Remove the undefined AccountsIziam.GrantType alias and its API documentation
+    - Remove iziam-specific logout component and translated labels
 
 ### 1.0.0
 

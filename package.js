@@ -41,7 +41,6 @@ function configure( api ){
     );
     api.addFiles( 'src/client/components/iziamChangeButton/iziamChangeButton.js', 'client' );
     api.addFiles( 'src/client/components/iziamLoginButton/iziamLoginButton.js', 'client' );
-    api.addFiles( 'src/client/components/iziamLogoutButton/iziamLogoutButton.js', 'client' );
     api.addAssets( 'resources/svg/iziam.svg', 'client' );
 }
 

@@ -35,5 +35,6 @@ Meteor.methods({
 
 // Application-facing server APIs. Applications own token storage and any
 // authorization policy; these are intentionally not anonymous DDP methods.
-AccountsIziam.authorizationFlow = (grantType, options) => iziamOAuth.authorizationFlow(grantType, options);
-AccountsIziam.completeAuthorization = (query, credentialToken) => iziamOAuth.completeAuthorization(query, credentialToken);
+AccountsIziam.authorizationFlow = ( grantType, options ) => iziamOAuth.authorizationFlow( grantType, options );
+
+AccountsIziam.completeAuthorization = ( query, credentialToken ) => iziamOAuth.completeAuthorization( query, credentialToken );
