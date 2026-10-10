@@ -65,13 +65,13 @@ Meteor.startup(() => {
                 });
             });
             $( document ).on( 'ac-panel-changepwd-event', '.acUserLogin', function( event, data ){
-                if( AccountsIziam.isIziamUser()){
+                if( AccountsIziam.isIziamUser( Meteor.userId())){
 
                 }
             });
             $( document ).on( 'ac-panel-signout-event', '.acUserLogin', function( event, data ){
                 // Inspect already published fields synchronously to preserve the popup gesture.
-                if( Meteor.user()?.services?.iziam ){
+                if( AccountsIziam.isIziamUser( Meteor.userId())){
                     const target = $( event.currentTarget );
                     target.trigger( 'ac-close' );
                     AccountsIziam.logout().catch( error => {
