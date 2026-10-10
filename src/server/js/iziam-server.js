@@ -41,16 +41,17 @@ async function identity( userId ){
 }
 
 Meteor.methods({
-    async 'pwix.accountsIziam.changeOptions'(options = {}) {
+    async 'pwix.accountsIziam.m.changeOptions'(options = {}) {
         check(options, Object);
-        const service = await identity(this.userId);
-        return iziamOAuth.s.loginOptions(options, {
-            purpose: 'change_password', expectedSubject: service.id
+        const service = await identity( this.userId );
+        return iziamOAuth.s.loginOptions( options, {
+            purpose: 'change_password',
+            expectedSubject: service.id
         });
     },
-    async 'pwix.accountsIziam.logoutOptions'() {
-        const service = await identity(this.userId);
-        return iziamOAuth.s.logoutOptions(service);
+    async 'pwix.accountsIziam.m.logoutOptions'() {
+        const service = await identity( this.userId );
+        return iziamOAuth.s.logoutOptions( service );
     }
 });
 

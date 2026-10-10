@@ -5,7 +5,9 @@
 import { Accounts } from 'meteor/accounts-base';
 import { logoutInPopup } from './logout-popup.js';
 import { iziamOAuth } from 'meteor/pwix:iziam-oauth';
-import { Meteor } from 'meteor/meteor';
+import { Logger } from 'meteor/pwix:logger';
+
+const logger = Logger.get();
 
 AccountsIziam.login = ( options, callback ) => {
     if( typeof options === 'function' ){
@@ -24,14 +26,15 @@ AccountsIziam.changePassword = ( options, callback ) => {
         callback = options;
         options = {};
     }
-    iziamOAuth.requestCredential( options, Accounts.oauth.credentialRequestCompleteHandler( callback ), 'pwix.accountsIziam.changeOptions');
+    iziamOAuth.requestCredential( options, Accounts.oauth.credentialRequestCompleteHandler( callback ), 'pwix.accountsIziam.m.changeOptions');
 };
 
 // The popup opens synchronously; fetch options before ending the authenticated DDP session.
 AccountsIziam.logout = () => logoutInPopup({
     browser: window,
     async getOptions(){
-        const result = await Meteor.callAsync( 'pwix.accountsIziam.logoutOptions' );
+        const result = await Meteor.callAsync( 'pwix.accountsIziam.m.logoutOptions' );
+        logger.debug( 'AccountsIziam.logout()', result );
         return result;
     },
     logoutLocal: () => new Promise(( resolve, reject ) => Meteor.logout( error => error ? reject( error ) : resolve()))

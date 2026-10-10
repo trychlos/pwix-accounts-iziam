@@ -14,8 +14,8 @@ const logger = Logger.get();
  * @locus Anywhere
  * @returns {Boolean} whether the currently connected user has been authenticated by izIAM Identity and Access Manager
  */
-AccountsIziam.isIziamUser = async function(){
-    let user;
+AccountsIziam.isIziamUser = async function( user ){
+    user = user || Meteor.userId();
     if( user ){
         let userDoc = user;
         if( _.isString( user )){
