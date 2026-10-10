@@ -16,6 +16,7 @@
     - Add password-change and provider-logout facade methods
     - Remove the undefined AccountsIziam.GrantType alias and its API documentation
     - Remove iziam-specific logout component and translated labels
+    - Set a hook on AccountsCore.onCreateUser() to improve user documents, adding pwix:accounts-core dependency
 
 ### 1.0.0
 

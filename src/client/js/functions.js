@@ -4,7 +4,10 @@
 
 import _ from 'lodash';
 
+import { Logger } from 'meteor/pwix:logger';
 import { Tracker } from 'meteor/tracker';
+
+const logger = Logger.get();
 
 Meteor.startup(() => {
     Tracker.autorun(() => {
@@ -55,7 +58,11 @@ Meteor.startup(() => {
 
             // install events handlers
             $( document ).on( 'ac-iziam-signin', '.acUserLogin', function( event, data ){
-                AccountsIziam.login();
+                AccountsIziam.login(( error ) => {
+                    if( error ){
+                        logger.log( error );
+                    }
+                });
             });
             $( document ).on( 'ac-panel-changepwd-event', '.acUserLogin', function( event, data ){
                 if( AccountsIziam.isIziamUser()){

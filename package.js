@@ -31,6 +31,7 @@ function configure( api ){
     api.use( 'check' );
     api.use( 'less@4.0.0', 'client' );
     api.use( 'oauth' );
+    api.use( 'pwix:accounts-core@2.3.0' );
     api.use( 'pwix:i18n@1.5.2' );
     api.use( 'pwix:iziam-oauth@1.0.0-rc.1' );
     api.use( 'pwix:logger@1.0.0-rc' );

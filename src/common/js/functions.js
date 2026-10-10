@@ -30,7 +30,7 @@ AccountsIziam.isIziamUser = async function(){
                 return false;
             }
         }
-        const isIziam = Boolean( userDoc && userDoc.DYN?.services && userDoc.DYN.services.includes( iziamOAuth.C.Service ));
+        const isIziam = Boolean( userDoc && userDoc.services && userDoc.services.includes( iziamOAuth.C.Service ));
         return isIziam;
     }
     return false;
