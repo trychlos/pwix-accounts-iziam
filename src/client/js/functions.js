@@ -70,8 +70,14 @@ Meteor.startup(() => {
                 }
             });
             $( document ).on( 'ac-panel-signout-event', '.acUserLogin', function( event, data ){
-                if( AccountsIziam.isIziamUser()){
-
+                // Inspect already published fields synchronously to preserve the popup gesture.
+                if( Meteor.user()?.services?.iziam ){
+                    const target = $( event.currentTarget );
+                    target.trigger( 'ac-close' );
+                    AccountsIziam.logout().catch( error => {
+                        logger.error( 'izIAM logout failed', error );
+                        target.trigger( 'ac-display-error', error.reason || error.message );
+                    });
                 }
             });
         }
