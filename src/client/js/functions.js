@@ -59,7 +59,9 @@ Meteor.startup(() => {
             // install events handlers
             $( document ).on( 'ac-iziam-signin', '.acUserLogin', function( event, data ){
                 AccountsIziam.login(( error ) => {
-                    if( error ){
+                    if( error?.errorType === 'Accounts.LoginCancelledError' ){
+                        logger.debug( error.errorType );
+                    } else if( error ){
                         logger.log( error );
                     }
                 });
