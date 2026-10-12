@@ -63,9 +63,11 @@ Before the first request, configure the same return route on client and server:
   obtain the provider end-session URL while authenticated, then end the Meteor
   session and navigate only the popup. Popup blocking or option-fetch failure
   rejects before local logout. The promise resolves after local logout and launch;
-  it does not certify provider-session termination. The izIAM interaction page
-  confirms global logout or application-only logout and closes the popup when done.
-  Closing the popup without confirming leaves the provider session active.
+  it does not certify provider-session termination. With `confirmLogout: true`,
+  the package first asks for confirmation; declining changes neither session and
+  opens no popup. The default `false` proceeds directly. A validated ID-token hint
+  lets izIAM complete provider logout without a second confirmation. Closing the
+  popup before completion may leave the provider session active.
   Popup mode omits `post_logout_redirect_uri` to use izIAM's completion page;
   it does not change the configured URI for other flows. If no provider logout
   URL is available, only local logout occurs and the blank popup is closed.
@@ -146,7 +148,7 @@ Known configuration options are:
 
 - `confirmLogout`
 
-    Whether the logout must be confirmed by the user.
+    Whether `AccountsIziam.logout()` asks for confirmation before terminating the session.
 
     Defaults to `false`.
 

@@ -60,3 +60,33 @@ test('local logout failure closes the popup without sending it to the provider',
         logoutLocal:async()=>{throw new Error('local failure');}}), /local failure/);
     assert.deepEqual(f.events,['open','close']);
 });
+
+
+test('declining configured confirmation preserves both sessions and opens no popup', async () => {
+    const f = fixture();
+    f.browser.confirm = message => { assert.equal(message, 'Confirm logout?'); return false; };
+    await logoutInPopup({browser:f.browser, confirmLogout:true, confirmationMessage:'Confirm logout?',
+        getOptions:()=>assert.fail('lookup'), logoutLocal:()=>assert.fail('logout')});
+    assert.deepEqual(f.events, []);
+});
+
+test('accepting configured confirmation starts logout synchronously', async () => {
+    const f = fixture();
+    f.browser.confirm = () => { f.events.push('confirm'); return true; };
+    const task = logoutInPopup({browser:f.browser, confirmLogout:true, confirmationMessage:'Confirm logout?',
+        getOptions:async()=>({url:'https://id.example/logout?id_token_hint=test'}),
+        logoutLocal:async()=>f.events.push('logout')});
+    assert.deepEqual(f.events, ['confirm','open']);
+    await task;
+    assert.equal(f.events[2], 'logout');
+    assert.equal(f.events[3][0], 'navigate');
+});
+
+test('disabled confirmation never asks the user', async () => {
+    const f = fixture();
+    f.browser.confirm = () => assert.fail('confirmation');
+    await logoutInPopup({browser:f.browser, confirmLogout:false,
+        getOptions:async()=>({url:'https://id.example/logout?id_token_hint=test'}),
+        logoutLocal:async()=>f.events.push('logout')});
+    assert.equal(f.events[0], 'open');
+});

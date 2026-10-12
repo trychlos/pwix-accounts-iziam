@@ -6,6 +6,7 @@
 
     Release date: 
 
+    - Honor confirmLogout before starting logout and return its completion promise.
     - Handle cancelled dropdown logins like the login button, without logging an error object.
     - Complete provider logout in an izIAM interaction popup without navigating the client app.
     - Use pwix:logger universal logger, thus bumping minor candidate version number

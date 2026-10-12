@@ -5,6 +5,7 @@
 import { Accounts } from 'meteor/accounts-base';
 import { iziamOAuth } from 'meteor/pwix:iziam-oauth';
 import { Logger } from 'meteor/pwix:logger';
+import { pwixI18n } from 'meteor/pwix:i18n';
 
 const logger = Logger.get();
 
@@ -32,8 +33,10 @@ AccountsIziam.changePassword = ( options, callback ) => {
 
 // The popup opens synchronously; fetch options before ending the authenticated DDP session.
 AccountsIziam.logout = () => {
-    logoutInPopup({
+    return logoutInPopup({
         browser: window,
+        confirmLogout: AccountsIziam.configure().confirmLogout === true,
+        confirmationMessage: pwixI18n.label( I18N, 'logout.confirm' ),
         async getOptions(){
             const result = await Meteor.callAsync( 'pwix.accountsIziam.m.logoutOptions' );
             //logger.debug( 'AccountsIziam.logout()', result );

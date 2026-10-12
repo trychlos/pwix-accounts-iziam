@@ -18,6 +18,9 @@ AccountsIziam.i18n = {
                     label: 'Se connecter avec izIAM',
                     title: 'Se connecte avec le gestionnaire d\'identités izIAM'
                 }
+            },
+            logout: {
+                confirm: 'Se déconnecter de cette application et d’izIAM ?'
             }
         }
     }

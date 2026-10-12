@@ -1,13 +1,15 @@
 /* Popup orchestration, independent of Meteor for browser lifecycle testing. */
 
 /**
+ * Optionally confirm before opening the logout window or changing either session.
  * Open the logout window before any asynchronous work, then end the local session.
  * Resolves when local logout and popup navigation complete, not when the user
- * confirms provider logout. Closing the popup early does not imply provider logout.
- * @param {Object} options browser window, getOptions and logoutLocal callbacks
+ * completes provider logout. Closing the popup early does not imply provider logout.
+ * @param {Object} options browser, getOptions, logoutLocal, confirmLogout and confirmationMessage
  * @returns {Promise<void>} local logout and launch completion
  */
-export async function logoutInPopup({ browser, getOptions, logoutLocal }){
+export async function logoutInPopup({ browser, getOptions, logoutLocal, confirmLogout=false, confirmationMessage }){
+    if( confirmLogout && !browser.confirm( confirmationMessage )) return;
     const popup = browser.open( '', '_blank', 'popup=yes,width=620,height=480,resizable=yes,scrollbars=yes' );
     if( !popup ) throw new Error( 'Allow popups to sign out of izIAM, then try again.' );
     try {
