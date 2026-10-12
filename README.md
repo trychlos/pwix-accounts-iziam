@@ -11,7 +11,7 @@ On client side, this package defines `Meteor.loginWithIziam()` function.
 The former `pwix:iziam-oidc` package is retired. You should remove any direct dependency on
 it. There is no compatibility alias or parallel protocol implementation.
 
-## Installation and configuration
+## Installation and settings
 
 Requires Meteor 3.3.1 or later (tested on 3.5.2) and Node 22.12 or later.
 
@@ -125,6 +125,62 @@ notifications.
 The consolidated package includes Node protocol tests, Meteor client/server
 tests, and a Chromium walkthrough covering login and password change.
 See its maintainer documentation. Nothing is published automatically.
+
+## Configuration
+
+The package's behavior can be configured through a call to the `AccountsIziam.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
+
+Known configuration options are:
+
+- `changeLabel`
+- `changeLogo`
+- `changeTitle`
+
+    Repectively label, logo path and title of the `Change password` popup dialog.
+
+    They default to respectively:
+
+    - (translated) 'Change izIAM password'
+    - /path/to/iziam/logo
+    - (translated) 'Change your password in izIAM Identity Manager'.
+
+- `confirmLogout`
+
+    Whether the logout must be confirmed by the user.
+
+    Defaults to `false`.
+
+- `loginLabel`
+- `loginLogo`
+- `loginTitle`
+
+    Repectively label, logo path and title of the `Login` popup dialog.
+
+    They default to respectively:
+
+    - (translated) 'Login with izIAM'
+    - /path/to/iziam/logo
+    - (translated) 'Login with izIAM Identity Manager'.
+
+- `verbosity`
+
+    Defines the expected verbosity level.
+
+    The accepted value can be any or-ed combination of following:
+
+    - `AccountsIziam.C.Verbose.NONE`
+
+        Do not display any trace log to the console
+
+    - `AccountsIziam.C.Verbose.CONFIGURE`
+
+        Display the configuration options and result.
+
+    Defaults to `AccountsIziam.C.Verbose.CONFIGURE`.
+
+Please note that `AccountsIziam.configure()` method should be called in the same terms both in client and server sides.
+
+Remind too that Meteor packages are instanciated at application level. They are so only configurable once, or, in other words, only one instance has to be or can be configured. Addtionnal calls to `AccountsIziam.configure()` will just override the previous one. You have been warned: **only the application should configure a package**.
 
 ## NPM peer dependencies
 

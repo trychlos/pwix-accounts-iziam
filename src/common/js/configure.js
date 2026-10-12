@@ -17,6 +17,7 @@ AccountsIziam._defaults = {
     changeLabel: pwixI18n.label( I18N, 'change.button.label' ),
     changeLogo: '/packages/pwix_accounts-iziam/resources/svg/iziam.svg',
     changeTitle: pwixI18n.label( I18N, 'login.button.title' ),
+    confirmLogout: false,
     loginLabel: pwixI18n.label( I18N, 'login.button.label' ),
     loginLogo: '/packages/pwix_accounts-iziam/resources/svg/iziam.svg',
     loginTitle: pwixI18n.label( I18N, 'login.button.title' ),
