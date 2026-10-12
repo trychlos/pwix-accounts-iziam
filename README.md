@@ -17,7 +17,7 @@ Requires Meteor 3.3.1 or later (tested on 3.5.2) and Node 22.12 or later.
 
 ```sh
     meteor add pwix:accounts-iziam
-    meteor npm install 'openid-client@^6.8.4'
+    meteor npm install lodash
 ```
 
 The pwix settings, logging, i18n and UI packages retain their own npm peers.
@@ -31,14 +31,13 @@ Configure `private.iziam` in the selected environment, or provide
             "issuerUrl": "https://identity.example/tenant",
             "client_id": "application-client",
             "client_secret": "configure-outside-source-control",
-            "redirect_uri": "https://application.example/_oauth/iziam",
             "scopes": [ "openid", "profile", "email" ]
         }
     }
 }
 ```
 
-`redirect_uri` must match `Meteor.absoluteUrl('_oauth/iziam')`. Set `ROOT_URL`
+`redirect_uri` is automatically computed as `Meteor.absoluteUrl('_oauth/iziam')`. Set `ROOT_URL`
 correctly and register the URL with izIAM. Client secrets remain server-side.
 The complete settings and server-grant contract are documented in
 [pwix:iziam-oauth](https://github.com/trychlos/pwix-iziam-oauth#readme).
@@ -46,8 +45,8 @@ The complete settings and server-grant contract are documented in
 Before the first request, configure the same return route on client and server:
 
 ```js
-import { AccountsIziam } from 'meteor/pwix:accounts-iziam';
-AccountsIziam.configure({ afterRoute: '/' });
+    import { AccountsIziam } from 'meteor/pwix:accounts-iziam';
+    AccountsIziam.configure({ afterRoute: '/' });
 ```
 
 ## Browser API
@@ -80,14 +79,14 @@ for autopublication. Access tokens, refresh tokens and ID tokens stay private.
 ## Server API
 
 ```js
-import { AccountsIziam } from 'meteor/pwix:accounts-iziam';
+    import { AccountsIziam } from 'meteor/pwix:accounts-iziam';
 
-const machine = await AccountsIziam.authorizationFlow('client_credentials', {
-    scopes: ['api:read']
-});
-const renewed = await AccountsIziam.authorizationFlow('refresh_token', {
-    credentials: storedCredentials
-});
+    const machine = await AccountsIziam.authorizationFlow( 'client_credentials', {
+        scopes: ['api:read']
+    });
+    const renewed = await AccountsIziam.authorizationFlow( 'refresh_token', {
+        credentials: storedCredentials
+    });
 ```
 
 These functions are server-only and are not anonymous Meteor methods. The

@@ -7,7 +7,6 @@
     Release date: 
 
     - Handle cancelled dropdown logins like the login button, without logging an error object.
-
     - Complete provider logout in an izIAM interaction popup without navigating the client app.
     - Use pwix:logger universal logger, thus bumping minor candidate version number
     - Move asset resources to root directory (todo #1)

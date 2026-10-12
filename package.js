@@ -37,6 +37,7 @@ function configure( api ){
     api.use( 'pwix:logger@1.0.0-rc' );
     api.use( 'pwix:ui-layout@2.2.0' );
     api.use( 'reactive-var' );
+    api.use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
     api.use(
         ['pwix:accounts-ui@2.0.0'], ['client', 'server'], { weak: true }
     );
