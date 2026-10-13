@@ -3,13 +3,12 @@
 ## What is it ?
 
 `pwix:accounts-iziam` is the application-facing izIAM integration for Meteor. Applications use this
-package for login, password change, and server-side OAuth or OopenID grants. It
+package for login, password change, and server-side OAuth or OpenID grants. It
 relies exclusively on `pwix:iziam-oauth` for OAuth 2 and OpenID Connect 1.0.
 
 On client side, this package defines `Meteor.loginWithIziam()` function.
 
-The former `pwix:iziam-oidc` package is retired. You should remove any direct dependency on
-it. There is no compatibility alias or parallel protocol implementation.
+The former`pwix:iziam-oidc` implementation is retired; there is no compatibility wrapper.
 
 ## Installation and settings
 
@@ -37,25 +36,18 @@ Configure `private.iziam` in the selected environment, or provide
 }
 ```
 
-`redirect_uri` is automatically computed as `Meteor.absoluteUrl('_oauth/iziam')`. Set `ROOT_URL`
-correctly and register the URL with izIAM. Client secrets remain server-side.
+`redirect_uri` is automatically computed as `Meteor.absoluteUrl('_oauth/iziam')`.
+Do not omit to set `ROOT_URL` correctly and register the URL with izIAM. Client secrets remain server-side.
 The complete settings and server-grant contract are documented in
 [pwix:iziam-oauth](https://github.com/trychlos/pwix-iziam-oauth#readme).
 
-Before the first request, configure the same return route on client and server:
-
-```js
-    import { AccountsIziam } from 'meteor/pwix:accounts-iziam';
-    AccountsIziam.configure({ afterRoute: '/' });
-```
-
 ## Browser API
 
-- `Meteor.loginWithIzIAM(options?, callback?)` / `AccountsIziam.login(...)`:
+- `Meteor.loginWithIzIAM( options?, callback? )` / `AccountsIziam.login(...)`:
   start OIDC login. Options: `loginStyle` (`popup` or `redirect`), `popupOptions`
   (object), `scopes` (array), and `mobileHint` (forces redirect).
 
-- `AccountsIziam.changePassword(options?, callback?)`: start izIAM's password
+- `AccountsIziam.changePassword(o ptions?, callback? )`: start izIAM's password
   interaction for the logged-in identity. A different returned subject is
   rejected. The callback reports completion or failure; tokens are not polled.
 
