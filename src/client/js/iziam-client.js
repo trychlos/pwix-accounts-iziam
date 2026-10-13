@@ -36,7 +36,6 @@ AccountsIziam.logout = () => {
     return logoutInPopup({
         browser: window,
         confirmLogout: AccountsIziam.configure().confirmLogout === true,
-        confirmationMessage: pwixI18n.label( I18N, 'logout.confirm' ),
         async getOptions(){
             const result = await Meteor.callAsync( 'pwix.accountsIziam.m.logoutOptions' );
             //logger.debug( 'AccountsIziam.logout()', result );
