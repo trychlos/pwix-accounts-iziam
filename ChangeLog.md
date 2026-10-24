@@ -2,9 +2,9 @@
 
 ## ChangeLog
 
-### 1.1.0-rc
+### 1.1.0
 
-    Release date: 
+    Release date: 2026-10-24
 
     - Use the shared izIAM logout prompt and wait for verified provider completion before local logout.
     - Honor confirmLogout before starting logout and return its completion promise.
@@ -30,4 +30,4 @@ Release date: 2024-11-29
 
 ---
 P. Wieser
-- Last updated on 2024, Nov. 29th
+- Last updated on 2026, Oct. 24th
